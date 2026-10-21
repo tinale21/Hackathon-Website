@@ -266,9 +266,6 @@ img { max-width: 100%; }
 .intro-glow { position: absolute; width: 70vmax; aspect-ratio: 1; border-radius: 50%; filter: blur(60px); opacity: .9; pointer-events: none; }
 .intro-glow.a { left: -25vmax; top: -30vmax; background: radial-gradient(circle, #d6c8f6 0%, rgba(214,200,246,0) 65%); animation: glowA 13s ease-in-out infinite alternate; }
 .intro-glow.b { right: -25vmax; bottom: -35vmax; background: radial-gradient(circle, #ffd3c4 0%, rgba(255,211,196,0) 65%); animation: glowB 16s ease-in-out infinite alternate; }
-.intro-sparks { position: absolute; inset: 0; pointer-events: none; }
-.intro-sparks i { position: absolute; border-radius: 50%; box-shadow: 0 0 6px currentColor; animation-name: sparkRise, twinkle; animation-timing-function: linear, ease-in-out; animation-iteration-count: infinite, infinite; }
-@keyframes sparkRise { from { translate: 0 30px; } to { translate: 0 -30px; } }
 .intro-center { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; max-width: 440px; width: 100%; animation: rise .8s var(--ease) both; }
 .intro-label { font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
 .intro-lockup { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 10px; }

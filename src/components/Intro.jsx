@@ -19,7 +19,6 @@ const ENVELOPES = [
   { id: 'rose', label: 'Rose', swatch: '#f4aecb', c: ['#f7b8d2', '#ffd6e5', '#d9ccfa', '#f2a8c5', '#fdeef4'] },
   { id: 'butter', label: 'Butter', swatch: '#f6dc8f', c: ['#fff1c2', '#ffd9b5', '#ffe9f0', '#fbe7a6', '#fff8e4'] },
 ]
-const SPARKS = ['#a58cf0', '#f39cc0', '#ffb08a', '#8fbaf3', '#8fd3b4']
 
 function Clock() {
   const [now, setNow] = useState(() => new Date())
@@ -37,11 +36,6 @@ export default function Intro({ onDone }) {
   const [leaving, setLeaving] = useState(false)
   const first = useRef(null)
   const today = useMemo(() => new Date().toLocaleDateString([], { month: '2-digit', day: '2-digit', year: '2-digit' }), [])
-  // Pastel sparkles drifting up, Lumen's take on the reference's starfield.
-  const sparks = useMemo(() => Array.from({ length: 42 }, (_, i) => ({
-    left: `${(i * 37 + 11) % 100}%`, top: `${(i * 53 + 7) % 100}%`, size: 3 + (i % 4), c: SPARKS[i % SPARKS.length],
-    delay: `${-(i * 0.73) % 9}s`, dur: `${7 + (i % 5) * 1.6}s`,
-  })), [])
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -63,9 +57,6 @@ export default function Intro({ onDone }) {
     <div className={`intro${leaving ? ' leaving' : ''}`} role="dialog" aria-modal="true" aria-label="Welcome to Lumen">
       <span className="intro-glow a" aria-hidden="true" />
       <span className="intro-glow b" aria-hidden="true" />
-      <div className="intro-sparks" aria-hidden="true">
-        {sparks.map((s, i) => <i key={i} style={{ left: s.left, top: s.top, width: s.size, height: s.size, background: s.c, animationDelay: `${s.delay}, ${s.delay}`, animationDuration: `${s.dur}, 3.2s` }} />)}
-      </div>
 
       {step === 'welcome' ? (
         <div className="intro-center" key="welcome">
