@@ -12,7 +12,6 @@ const PROMPTS = {
   sound: { img: 'prompt-sound.webp', imgSize: 'cover', imgPos: '50% 100%', imgBg: '#d8f7ec', veil: .06, fade: .6, lead: 'A sound from', accentText: 'where you are', sub: 'ten seconds is plenty', desc: 'The studio fan, the bus, the rain, your roommate laughing. Let them hear your day.', card: ['#d2f0ec', '#7fd0c6'], grad: ['#1f9488', '#5cc5b8'], ink: '#0d3a35' },
   smile: { img: 'prompt-smile.webp', imgSize: 'cover', imgPos: '50% 100%', imgBg: '#fac57f', veil: .06, fade: .6, lead: 'Something that', accentText: 'made you smile', sub: 'even for a second', desc: 'A sky, a snack, a friend’s face, a sticker on a lamp post. Tiny counts.', card: ['#fbf0c7', '#efd06a'], grad: ['#a86a08', '#c98a1c'], ink: '#3d300a' },
   home: { img: 'prompt-home.webp', imgSize: 'cover', imgPos: '50% 100%', imgBg: '#dedff6', veil: .06, fade: .6, lead: 'What do you', accentText: 'miss from home?', sub: 'a taste, a place, a habit', desc: 'Something small you didn’t notice until you left. They might be able to send a little piece of it.', card: ['#fadde8', '#f2a7c3'], grad: ['#d94f86', '#f08bb4'], ink: '#4a1430' },
-  workstation: { img: 'prompt-workstation-blue.webp', imgSize: 'cover', imgPos: '50% -80px', imgBg: '#93bbe4', veil: .08, lead: 'Picture your', accentText: 'workstation', sub: 'mess and all', desc: 'Where the work actually happened this week. Not the finished piece, the middle of it.', card: ['#e3edfb', '#a9c6ee'], grad: ['#3a5bd9', '#7aa7ee'], ink: '#16285a' },
 }
 
 const paint = (p) => `${p.fade ? `linear-gradient(transparent 82%, rgba(255,255,255,${p.fade}) 93%), ` : ''}linear-gradient(rgba(255,255,255,${p.veil}), rgba(255,255,255,${p.veil})), url(${media(p.img)}) ${p.imgPos}/${p.imgSize} no-repeat, ${p.imgBg}`
@@ -85,14 +84,51 @@ function Deck() {
   )
 }
 
-/* Show me working: the "Behind the outcome" prompt card, painting drifting. */
+/* Show me working: the Capture screen's photo mode (Create.jsx). It loops: empty camera view,
+   the shutter is pressed, a flash, the photo with Retake / Use photo, then back. */
+const CAM_W = 342, CAM_H = 360
 function Working() {
   const box = useRef(null)
-  const s = useFit(box, 0.8)
+  const s = useFit(box, 0.9, CAM_H)
+  const [phase, setPhase] = useState('ready') // ready → press → taken
+  useEffect(() => {
+    if (calm()) return
+    const steps = { ready: ['press', 2200], press: ['taken', 260], taken: ['ready', 3400] }
+    let t
+    const run = (p) => { setPhase(p); t = setTimeout(() => run(steps[p][0]), steps[p][1]) }
+    t = setTimeout(() => run('ready'), 0)
+    return () => clearTimeout(t)
+  }, [])
+  const taken = phase === 'taken'
   return (
-    <div className="fa fa-working" ref={box}>
-      <div className="fa-stage fa-bob" style={{ width: CARD_W, height: CARD_H, transform: `translate(-50%, -50%) scale(${s})` }}>
-        <PromptCard p={PROMPTS.workstation} />
+    <div className="fa fa-camera" ref={box}>
+      <div className="fa-stage" style={{ width: CAM_W, height: CAM_H, transform: `translate(-50%, -50%) scale(${s})` }}>
+        <div className="cam">
+          {taken
+            ? <img key="shot" src={media('me-artbox.webp')} alt="" className="cam-shot" />
+            : <>
+                <span className="cam-ph">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg>
+                  Camera view
+                </span>
+                <span className="brackets"><i /><i /><i /><i /></span>
+              </>}
+          {taken ? <span key="flash" className="cam-flash" /> : null}
+        </div>
+        <div className="cam-row">
+          {taken
+            ? <>
+                <span className="pill outline">Retake</span>
+                <span className="pill">Use photo</span>
+              </>
+            : <>
+                <span />
+                <span className="shutter" style={{ transform: phase === 'press' ? 'scale(.9)' : 'none' }}><span /></span>
+                <span className="cam-lib">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3" /><circle cx="9" cy="10" r="2" /><path d="M21 16l-5-5-9 9" /></svg>
+                </span>
+              </>}
+        </div>
       </div>
     </div>
   )
