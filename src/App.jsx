@@ -110,7 +110,7 @@ function Gallery() {
       <div className="section-head">
         <p className="label">Video Gallery</p>
         <h2 className="display sm">The films</h2>
-        <p className="lede">Walk through Lumen like an art gallery. Each screen is a film from the life of one family: Audrey, an art student, and her mom.</p>
+        <p className="lede">Walk through Lumen like an art gallery. Each screen is a short film about a student and a parent finding the middle of the story.</p>
       </div>
       <div className="gallery-frame">
         {src
