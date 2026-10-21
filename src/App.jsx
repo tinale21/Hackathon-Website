@@ -15,7 +15,7 @@ const DEMO = 'https://tinale21.github.io/Hackathon/'
 const isGallery = () => window.location.hash === '#/gallery'
 const noop = (e) => e.preventDefault()
 const calm = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
-let origin = '.gallery-frame' // what to shrink back into on close
+let origin = '.gallery-frame' // what was clicked to open the gallery
 let homeY = 0
 
 function transition(update, after) {
@@ -61,9 +61,11 @@ export default function App() {
       transition(() => {
         flushSync(() => setPage('home'))
         window.scrollTo(0, homeY)
-        const el = document.querySelector(origin)
+        // Only the gallery preview shrinks the page back into itself; from the nav link or the hero button
+        // the page just cross-fades, so their text doesn't zoom.
+        const el = origin === '.gallery-frame' && document.querySelector(origin)
         if (el) el.style.viewTransitionName = 'gallery'
-      }, () => { const el = document.querySelector(origin); if (el) el.style.viewTransitionName = '' })
+      }, () => { const el = document.querySelector('.gallery-frame'); if (el) el.style.viewTransitionName = '' })
     }
     window.addEventListener('hashchange', onHash)
     return () => window.removeEventListener('hashchange', onHash)
