@@ -3,7 +3,7 @@
 
 > *Share the middle of the story.*
 
-The site we give to judges. It has three parts: **About Lumen**, a **Gallery** of our films, and a **Demo** that embeds the working prototype from the [Hackathon](https://github.com/tinale21/Hackathon) repo (live at https://tinale21.github.io/Hackathon/). The look follows the Lumen app: Newsreader and Geist, light grey and white with black pills, and pastel painted art.
+The site we give to judges. It has three parts: **About Lumen**, a **Gallery** (a click-through film gallery prototype), and a **Demo** that embeds the working prototype from the [Hackathon](https://github.com/tinale21/Hackathon) repo (live at https://tinale21.github.io/Hackathon/). The look follows the Lumen app: Newsreader and Geist, light grey and white with black pills, and pastel painted art.
 
 ---
 
@@ -13,19 +13,14 @@ https://tinale21.github.io/Hackathon-Website/
 
 ---
 
-## Adding videos to the Gallery
+## Adding the Gallery
 
-All videos are listed in [`src/videos.js`](src/videos.js). To add one:
+The Gallery is its own click-through prototype, built by a teammate. The site embeds it in a wide frame, the same way the Demo embeds the app. Until it's connected, the frame shows "The gallery opens here soon."
 
-1. **YouTube or Vimeo (recommended for big files):** paste the share link into `src`. The thumbnail comes from YouTube automatically.
-2. **A video file:** put the `.mp4` in `public/videos/` and write `src: 'videos/my-film.mp4'`. Optionally add a still as `poster: 'videos/my-film.jpg'`. Keep files under 100 MB; GitHub won't accept anything larger.
-3. Fill in `title` and `description`. For video shot on a phone, add `ratio: '9/16'`.
-4. Delete the `placeholder: true` sample entries once the real videos are in.
+To connect it, set `GALLERY_URL` in [`src/gallery.js`](src/gallery.js):
 
-```js
-{ title: 'Lumen in two minutes', description: 'Our pitch.', src: 'https://youtu.be/XXXXXXXXXXX' },
-{ title: 'Audrey’s week', description: 'A letter from prompt to seal.', src: 'videos/audreys-week.mp4', poster: 'videos/audreys-week.jpg', ratio: '9/16' },
-```
+- **Hosted build (recommended):** paste its link, e.g. `'https://<username>.github.io/<repo>/'`.
+- **Files in this repo:** copy the build's `index.html` and files into `public/gallery/`, then set `GALLERY_URL` to `'gallery/index.html'`. The build must use relative paths (Vite: `base: './'`), and video files must each be under 100 MB.
 
 Push to `main`, and the site redeploys in about a minute.
 

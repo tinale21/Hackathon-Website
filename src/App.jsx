@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Lockup } from './components/LumenMark.jsx'
-import { VIDEOS } from './videos.js'
+import { GALLERY_URL } from './gallery.js'
 
 const media = (f) => `${import.meta.env.BASE_URL}media/${f}`
 const DEMO = 'https://tinale21.github.io/Hackathon/'
@@ -51,7 +51,7 @@ function Hero() {
         <p className="lede">Lumen is a sealed letter between immigrant and international art students and their families. A few short prompts let each side show what the week really took, not just how it turned out.</p>
         <div className="actions">
           <a href="#demo" className="pill">Try the demo</a>
-          <a href="#gallery" className="pill ghost">Watch the films</a>
+          <a href="#gallery" className="pill ghost">Visit the gallery</a>
         </div>
       </div>
       <div className="ring-wrap rise" style={{ animationDelay: '.12s' }} aria-hidden="true">
@@ -130,69 +130,33 @@ function About() {
 }
 
 /* ---------- Gallery ---------- */
-function parseVideo(src) {
-  if (!src) return null
-  const yt = src.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/))([\w-]{11})/)
-  if (yt) return { kind: 'embed', url: `https://www.youtube.com/embed/${yt[1]}?autoplay=1&rel=0`, thumb: `https://i.ytimg.com/vi/${yt[1]}/hqdefault.jpg` }
-  const vm = src.match(/vimeo\.com\/(?:video\/)?(\d+)/)
-  if (vm) return { kind: 'embed', url: `https://player.vimeo.com/video/${vm[1]}?autoplay=1` }
-  return { kind: 'file', url: /^https?:/.test(src) ? src : `${import.meta.env.BASE_URL}${src}` }
-}
-
+// The gallery is its own prototype, built by a teammate. Point GALLERY_URL (src/gallery.js) at it to embed it here.
 function Gallery() {
-  const [open, setOpen] = useState(null)
+  const src = GALLERY_URL && (/^https?:/.test(GALLERY_URL) ? GALLERY_URL : `${import.meta.env.BASE_URL}${GALLERY_URL}`)
   return (
     <section id="gallery" className="section wrap">
       <div className="section-head">
         <p className="label">Gallery</p>
         <h2 className="display sm">The films</h2>
-        <p className="lede">See Lumen in the life of one family: Audrey, an art student, and her mom.</p>
+        <p className="lede">Walk through Lumen like an art gallery. Each screen is a film from the life of one family: Audrey, an art student, and her mom.</p>
       </div>
-      <div className="videos">
-        {VIDEOS.map((v, i) => {
-          const p = parseVideo(v.src)
-          const poster = v.poster ? `${import.meta.env.BASE_URL}${v.poster}` : p?.thumb
-          return (
-            <article key={i} className="video-card">
-              <button className="video-thumb" disabled={!p} onClick={() => setOpen({ ...v, p })} aria-label={p ? `Play ${v.title}` : `${v.title}, coming soon`} style={{ aspectRatio: '16/9' }}>
-                {poster
-                  ? <img src={poster} alt="" loading="lazy" />
-                  : p?.kind === 'file' ? <video src={`${p.url}#t=0.5`} muted playsInline preload="metadata" /> : <span className="video-holo" style={{ '--h': i * 40 }} />}
-                <span className="play">{p ? <PlayIcon /> : 'Coming soon'}</span>
-              </button>
-              <h3>{v.title}</h3>
-              {v.description && <p>{v.description}</p>}
-            </article>
-          )
-        })}
+      <div className="gallery-frame">
+        {src
+          ? <iframe src={src} title="Lumen gallery" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen />
+          : (
+            <div className="gallery-soon">
+              <span className="video-holo" aria-hidden="true" />
+              <span className="play">The gallery opens here soon</span>
+            </div>
+          )}
       </div>
-      {open && <Lightbox video={open} onClose={() => setOpen(null)} />}
+      {src && (
+        <div className="frame-links">
+          <a className="pill small outline" href={src} target="_blank" rel="noreferrer">Open full screen ↗</a>
+        </div>
+      )}
     </section>
   )
-}
-
-function Lightbox({ video, onClose }) {
-  useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && onClose()
-    window.addEventListener('keydown', onKey)
-    document.body.style.overflow = 'hidden'
-    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = '' }
-  }, [onClose])
-  const { p } = video
-  return (
-    <div className="lightbox" role="dialog" aria-modal="true" aria-label={video.title} onClick={onClose}>
-      <div className="lightbox-frame" style={{ aspectRatio: video.ratio || '16/9' }} onClick={(e) => e.stopPropagation()}>
-        {p.kind === 'file'
-          ? <video src={p.url} controls autoPlay playsInline />
-          : <iframe src={p.url} title={video.title} allow="autoplay; fullscreen; picture-in-picture" allowFullScreen />}
-      </div>
-      <button className="icon-btn close" onClick={onClose} aria-label="Close video">✕</button>
-    </div>
-  )
-}
-
-function PlayIcon() {
-  return <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg>
 }
 
 /* ---------- Demo ---------- */

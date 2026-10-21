@@ -108,28 +108,16 @@ img { max-width: 100%; }
 .principles h3 { font-family: var(--serif); font-weight: 400; font-size: 24px; letter-spacing: -.015em; margin: 0 0 8px; }
 .principles p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
 
-/* Gallery */
-.videos { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
-.video-card h3 { font-size: 18px; font-weight: 500; margin: 14px 4px 4px; }
-.video-card p { font-size: 15px; line-height: 1.45; color: var(--ink-2); margin: 0 4px; }
-.video-thumb { position: relative; display: block; width: 100%; padding: 0; border: none; border-radius: var(--r-lg); overflow: hidden; background: #e6e7ee; box-shadow: var(--shadow-card); }
-.video-thumb img, .video-thumb video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
-.video-thumb:not(:disabled):hover img, .video-thumb:not(:disabled):hover video { transform: scale(1.03); }
-.video-thumb:disabled { cursor: default; }
-.video-holo { position: absolute; inset: -20%; filter: blur(30px) hue-rotate(calc(var(--h) * 1deg)); background:
+/* Gallery: the teammate's prototype, embedded in a wide frame */
+.gallery-frame { position: relative; width: 100%; aspect-ratio: 4 / 3; max-height: calc(100svh - 120px); border-radius: var(--r-lg); overflow: hidden; background: #fff; box-shadow: 0 40px 100px rgba(29, 29, 34, 0.1), 0 0 0 1px rgba(29, 29, 34, .04); }
+.gallery-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.gallery-soon { position: absolute; inset: 0; overflow: hidden; display: grid; place-items: center; }
+.video-holo { position: absolute; inset: -20%; filter: blur(40px); background:
   radial-gradient(circle at 30% 35%, #ffd9c9 0%, rgba(255,217,201,0) 45%),
   radial-gradient(circle at 70% 40%, #d6c8f6 0%, rgba(214,200,246,0) 50%),
   radial-gradient(circle at 50% 80%, #b9d6fa 0%, rgba(185,214,250,0) 50%), #eceaf6; }
-.play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); min-width: 60px; height: 60px; border-radius: 30px; padding: 0 20px; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); font-size: 14px; font-weight: 500; color: var(--ink); transition: transform .2s ease; }
-.video-thumb:not(:disabled):hover .play { transform: translate(-50%, -50%) scale(1.06); }
-.video-thumb:disabled .play { color: var(--ink-2); }
-
-.lightbox { position: fixed; inset: 0; z-index: 50; background: rgba(20, 20, 26, .78); backdrop-filter: blur(8px); display: grid; place-items: center; padding: 24px; animation: fade .25s ease both; }
-.lightbox-frame { width: min(100%, 1100px, calc((100svh - 120px) * 16 / 9)); max-height: calc(100svh - 120px); border-radius: var(--r-md); overflow: hidden; background: #000; }
-.lightbox-frame[style*='9 / 16'], .lightbox-frame[style*='9/16'] { width: auto; height: calc(100svh - 120px); }
-.lightbox-frame video, .lightbox-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
-.lightbox .close { position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); right: 16px; }
-@keyframes fade { from { opacity: 0; } }
+.play { position: relative; height: 52px; border-radius: 26px; padding: 0 24px; display: inline-flex; align-items: center; background: rgba(255,255,255,.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); font-size: 15px; font-weight: 500; color: var(--ink-2); }
+.frame-links { display: flex; justify-content: center; margin-top: -24px; }
 
 /* Demo */
 .demo { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: start; }
@@ -186,6 +174,6 @@ img { max-width: 100%; }
   .section { padding-block: 64px; gap: 32px; }
   .lede { font-size: 16px; }
   .sides, .features, .principles, .team { grid-template-columns: 1fr; }
-  .videos { grid-template-columns: 1fr; }
+  .gallery-frame { aspect-ratio: 3 / 4; }
   .device { border-radius: 36px; width: min(390px, calc(100vw - 32px), calc((100svh - 100px) * 390 / 844)); }
 }
