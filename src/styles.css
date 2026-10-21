@@ -200,9 +200,6 @@ img { max-width: 100%; }
 .feature h3 { font-size: 19px; font-weight: 500; margin: 0 14px; }
 .feature p { font-size: 15px; line-height: 1.5; color: var(--ink-2); margin: 0 14px; }
 
-.principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; border-top: 1px solid #e2e4ea; padding-top: 32px; }
-.principles h3 { font-family: var(--serif); font-weight: 400; font-size: 24px; letter-spacing: -.015em; margin: 0 0 8px; }
-.principles p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
 
 /* Gallery: the teammate's prototype, embedded in a wide frame */
 .gallery-frame { position: relative; width: 100%; aspect-ratio: 4 / 3; max-height: calc(100svh - 120px); border-radius: var(--r-lg); overflow: hidden; background: #fff; box-shadow: 0 40px 100px rgba(29, 29, 34, 0.1), 0 0 0 1px rgba(29, 29, 34, .04); }
@@ -255,7 +252,7 @@ img { max-width: 100%; }
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; min-height: 0; padding-block: 32px 56px; }
   .ring-wrap { width: min(100%, 360px); order: -1; }
-  .features, .principles { grid-template-columns: 1fr 1fr; }
+  .features { grid-template-columns: 1fr 1fr; }
   .demo { grid-template-columns: 1fr; }
   /* Stacked: heading, then the phone, then the steps. */
   .demo-side { display: contents; }
@@ -268,7 +265,7 @@ img { max-width: 100%; }
   .nav a:not(.pill) { display: none; }
   .section { padding-block: 64px; gap: 32px; }
   .lede { font-size: 16px; }
-  .features, .principles, .team { grid-template-columns: 1fr; }
+  .features, .team { grid-template-columns: 1fr; }
   .gallery-frame { aspect-ratio: 3 / 4; }
   .device { border-radius: 36px; width: min(390px, calc(100vw - 32px), calc((100svh - 100px) * 390 / 844)); }
 }

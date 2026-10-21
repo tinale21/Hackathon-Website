@@ -77,12 +77,6 @@ const FEATURES = [
   { title: 'A semester recap', text: 'After a semester, the letters become a recap of everything the two of you shared.', art: 'recap' },
 ]
 
-const PRINCIPLES = [
-  ['Explains, never defends', 'Nothing counts hours, grades or output. A letter shows the work; it never has to prove it.'],
-  ['Student comfort first', 'When the two sides want different things, the student’s boundaries win.'],
-  ['Nobody can demand a letter', 'Either person can write. There are no reminders aimed at the other person.'],
-]
-
 function About() {
   return (
     <section id="about" className="section wrap">
@@ -103,12 +97,6 @@ function About() {
             </article>
           )
         })}
-      </div>
-
-      <div className="principles">
-        {PRINCIPLES.map(([t, d]) => (
-          <div key={t}><h3>{t}</h3><p>{d}</p></div>
-        ))}
       </div>
     </section>
   )
