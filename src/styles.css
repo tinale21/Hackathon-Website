@@ -153,17 +153,40 @@ img { max-width: 100%; }
 .twinkle.d3 { animation-delay: 1.8s; background: #b8d8fa; }
 @keyframes twinkle { 0%, 100% { opacity: .2; transform: scale(.7); } 50% { opacity: 1; transform: scale(1.1); } }
 
-/* Voice video and recap scene fill the box */
-.fa-voice video, .fa-recap svg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Voice recorder (VoiceOrb in Create.jsx) */
+.fa-voice { background: var(--fill); }
+.vrec { position: absolute; left: 0; right: 0; top: 0; height: 262px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+.vorb { position: relative; flex-shrink: 0; margin: -12px 0 -18px; }
+.orb-layer { position: absolute; border-radius: 50%; }
+.orb-layer > span { position: absolute; inset: -20%; }
+.vclock { position: relative; display: flex; align-items: center; gap: 10px; font-size: 30px; font-weight: 300; font-variant-numeric: tabular-nums; transition: color .3s ease; }
+.vdot { display: block; height: 10px; border-radius: 5px; background: #e5484d; transition: width .25s ease, margin .25s ease; }
+.vmic { position: absolute; left: 50%; bottom: 0; width: 58px; height: 58px; margin-left: -29px; border-radius: 50%; background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center; }
+@keyframes breathe { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.045); } }
+@keyframes recDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.7); } }
 
-/* Scene animations from the prototype (sceneArt.js) */
-.pa-ring { opacity: 0; animation: pa-ring 1.8s ease-out infinite; }
-.pa-twinkle { animation: pa-twinkle 2.8s ease-in-out infinite; }
-.pa-twinkle.d2 { animation-delay: 1.1s; }
-.pa-float { animation: pa-float 4s ease-in-out infinite; }
-@keyframes pa-ring { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(1.9); opacity: 0; } }
-@keyframes pa-twinkle { 0%, 100% { transform: scale(.7) rotate(0); opacity: .6; } 50% { transform: scale(1.1) rotate(45deg); opacity: 1; } }
-@keyframes pa-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -3px; } }
+/* Recap book cover (Receive.jsx) */
+.fa-recap { isolation: isolate; background: radial-gradient(130% 42% at 50% 0%, rgba(214,234,219,.9) 0%, rgba(228,241,231,.55) 45%, rgba(255,255,255,0) 100%), linear-gradient(180deg, #eef6f0 0%, #f7faf7 28%, #ffffff 55%); }
+.fa-recap .glow-a, .fa-recap .glow-b { position: absolute; z-index: -1; border-radius: 50%; pointer-events: none; }
+.fa-recap .glow-a { left: -30%; top: -45%; width: 90%; aspect-ratio: 1; background: radial-gradient(circle, #bfe3c9b3 0%, #bfe3c900 66%); animation: glowA 11s ease-in-out infinite alternate; }
+.fa-recap .glow-b { right: -35%; top: 5%; width: 80%; aspect-ratio: 1; background: radial-gradient(circle, #e4efc8a6 0%, #e4efc800 66%); animation: glowB 14s ease-in-out infinite alternate; }
+@keyframes glowA { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40%, 25%) scale(1.2); } }
+@keyframes glowB { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-40%, 35%) scale(.85); } }
+.cover { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center; }
+.cover-title { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 54px; line-height: 1.02; letter-spacing: -0.025em; color: var(--ink); }
+.cover-title .mask { display: block; overflow: hidden; padding-bottom: .12em; margin-bottom: -.12em; }
+.cover-title .mask > span { display: block; animation: maskUp 1s cubic-bezier(.16,1,.3,1) both; }
+.cover-stack { position: relative; width: 250px; height: 160px; margin: 14px 0; }
+.postage-wrap { position: absolute; filter: drop-shadow(0 6px 14px rgba(29,29,34,.10)); transform: rotate(var(--tilt)); animation: dropIn 1.1s cubic-bezier(.16,1,.3,1) both; }
+.postage { --r: 4px; width: 96px; height: 118px; padding: 8px; background: #fff; box-sizing: border-box;
+  -webkit-mask: radial-gradient(var(--r) at var(--r) var(--r), #0000 97%, #000) calc(-1 * var(--r)) calc(-1 * var(--r)) / calc(2 * var(--r)) calc(2 * var(--r)) round, linear-gradient(#000 0 0) content-box;
+          mask: radial-gradient(var(--r) at var(--r) var(--r), #0000 97%, #000) calc(-1 * var(--r)) calc(-1 * var(--r)) / calc(2 * var(--r)) calc(2 * var(--r)) round, linear-gradient(#000 0 0) content-box; }
+.postage img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.cover-stats { font-size: 15px; animation: bounceUp .9s .6s cubic-bezier(.16,1,.3,1) both; }
+@keyframes maskUp { from { transform: translateY(105%); } to { transform: none; } }
+@keyframes bounceUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes dropIn { from { opacity: 0; transform: translateY(60px) scale(.9) rotate(0deg); } to { opacity: 1; transform: rotate(var(--tilt)); } }
+@keyframes popIn { from { opacity: 0; transform: scale(.82); } to { opacity: 1; transform: none; } }
 .feature h3 { font-size: 19px; font-weight: 500; margin: 0 14px; }
 .feature p { font-size: 15px; line-height: 1.5; color: var(--ink-2); margin: 0 14px; }
 

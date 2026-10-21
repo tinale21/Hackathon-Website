@@ -1,10 +1,9 @@
-import { useEffect, useId, useRef, useState } from 'react'
-import SCENES from './sceneArt.js'
+import { useEffect, useRef, useState } from 'react'
 
 /* Live pieces of the Lumen app for the About feature cards.
    Copied from the prototype (Hackathon repo) so they look and move the same:
    prompt cards (Swipe.jsx), stamps (data.js), the envelope (Envelope.jsx),
-   the voice tile video and the Home recap scene (sceneArt.js). */
+   the voice recorder (Create.jsx) and the Recap book cover (Receive.jsx). */
 
 const media = (f) => `${import.meta.env.BASE_URL}media/${f}`
 const calm = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
@@ -20,13 +19,13 @@ const paint = (p) => `${p.fade ? `linear-gradient(transparent 82%, rgba(255,255,
 
 // Cards are laid out at the prototype's own size and scaled to fit the art box.
 const CARD_W = 342, CARD_H = 500
-function useFit(ref, h) {
+function useFit(ref, h, base = CARD_H) {
   const [s, setS] = useState(0.4)
   useEffect(() => {
-    const ro = new ResizeObserver(([e]) => setS((e.contentRect.height * h) / CARD_H))
+    const ro = new ResizeObserver(([e]) => setS((e.contentRect.height * h) / base))
     ro.observe(ref.current)
     return () => ro.disconnect()
-  }, [ref, h])
+  }, [ref, h, base])
   return s
 }
 
@@ -148,23 +147,111 @@ function Sealed() {
   )
 }
 
-/* Write back in your voice: the voice tile's video. */
+/* Write back in your voice: the recorder from the Capture screen (VoiceOrb in Create.jsx).
+   It loops a pretend recording: the timer runs and the orb moves like speech, then it resets. */
+const ORB = 220, VOICE_W = 340, VOICE_H = 330
 function Voice() {
+  const box = useRef(null)
+  const s = useFit(box, 0.94, VOICE_H)
+  const orb = useRef(null), halo = useRef(null), halo2 = useRef(null)
+  const [rec, setRec] = useState(false)
+  const [secs, setSecs] = useState(0)
+
+  useEffect(() => {
+    if (calm()) return
+    let t
+    const cycle = (on) => { setRec(on); if (!on) setSecs(0); t = setTimeout(() => cycle(!on), on ? 6500 : 2200) }
+    t = setTimeout(() => cycle(true), 1200)
+    return () => clearTimeout(t)
+  }, [])
+  useEffect(() => {
+    if (!rec) return
+    const t = setInterval(() => setSecs((n) => n + 1), 1000)
+    return () => clearInterval(t)
+  }, [rec])
+  // Same speech-like level as the prototype's pretend recording, driving the orb and its halos.
+  useEffect(() => {
+    if (!rec) return
+    let raf = 0, level = 0
+    const t0 = performance.now()
+    const tick = () => {
+      const t = (performance.now() - t0) / 1000
+      const target = Math.min(1, Math.max(0, Math.sin(t * 8.5)) * Math.max(0, Math.sin(t * 1.6) + 0.35) * 0.75 + Math.random() * 0.06)
+      level += (target - level) * (target > level ? 0.35 : 0.1)
+      if (orb.current) orb.current.style.transform = `scale(${1 + level * 0.22})`
+      if (halo.current) { halo.current.style.transform = `scale(${1.06 + level * 0.45})`; halo.current.style.opacity = String(0.35 + level * 0.5) }
+      if (halo2.current) { halo2.current.style.transform = `scale(${1.12 + level * 0.8})`; halo2.current.style.opacity = String(0.15 + level * 0.35) }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => {
+      cancelAnimationFrame(raf)
+      ;[orb, halo, halo2].forEach((r) => { if (r.current) { r.current.style.transform = ''; r.current.style.opacity = '' } })
+    }
+  }, [rec])
+
+  // The "slice of your day" prompt's colors, as the orb takes them from the prompt being answered.
+  const colors = ['#dff5df', '#ffd3e2', '#a8e6a6', '#d9ccfa', '#f6f2ff']
+  const layer = (ref, inset, blur, stop, still) => (
+    <span ref={ref} className="orb-layer" style={{ inset, WebkitMaskImage: `radial-gradient(circle, #000 ${stop}%, transparent 71%)`, maskImage: `radial-gradient(circle, #000 ${stop}%, transparent 71%)`, opacity: rec || ref === orb ? undefined : 0.45, transition: rec ? 'none' : 'transform .6s ease, opacity .6s ease' }}>
+      <span style={{ background: holo(colors), filter: `blur(${blur}px)`, animation: still ? 'none' : `holoDrift ${rec ? 4 : 12}s ease-in-out infinite alternate` }} />
+    </span>
+  )
   return (
-    <div className="fa fa-voice">
-      {/* React doesn't write the muted attribute, which some phones need before they autoplay; set it directly. */}
-      <video src={media('voice-bg.mp4')} poster={media('voice-wave.webp')} autoPlay muted loop playsInline aria-hidden="true"
-        ref={(v) => { if (v) { v.muted = true; v.play().catch(() => {}) } }} />
+    <div className="fa fa-voice" ref={box}>
+      <div className="fa-stage" style={{ width: VOICE_W, height: VOICE_H, transform: `translate(-50%, -50%) scale(${s})` }}>
+        <div className="vrec">
+          <div className="vorb" style={{ width: ORB, height: ORB, animation: rec ? 'none' : 'breathe 6s ease-in-out infinite' }}>
+            {layer(halo2, 0, 30, 20, true)}
+            {layer(halo, ORB * 0.093, 24, 30, true)}
+            {layer(orb, ORB * 0.18, 16, 45, false)}
+          </div>
+          <span className="vclock" style={{ color: rec ? '#e5484d' : 'var(--ink)' }}>
+            <span className="vdot" style={{ width: rec ? 10 : 0, marginLeft: rec ? 0 : -10, animation: rec ? 'recDot 1.2s ease-in-out infinite' : 'none' }} />
+            0:{String(secs).padStart(2, '0')}
+          </span>
+        </div>
+        <span className="vmic">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            {rec ? <rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor" stroke="none" /> : <><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3" /></>}
+          </svg>
+        </span>
+      </div>
     </div>
   )
 }
 
-/* A semester recap: the Home recap tile's painted scene, with its floating and twinkling. */
+/* A semester recap: the Recap book's cover (Receive.jsx). Its entrance replays every few seconds. */
+const COVER_W = 390, COVER_H = 400
+const POSTAGE = ['mom-changi.webp', 'me-six-flags.webp', 'mom-albania-still.webp']
 function Recap() {
-  const raw = useId().replace(/:/g, '')
+  const box = useRef(null)
+  const s = useFit(box, 0.92, COVER_H)
+  const [run, setRun] = useState(0)
+  useEffect(() => {
+    if (calm()) return
+    const t = setInterval(() => setRun((n) => n + 1), 7000)
+    return () => clearInterval(t)
+  }, [])
   return (
-    <div className="fa fa-recap">
-      <svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true" dangerouslySetInnerHTML={{ __html: SCENES.recap((s) => `${raw}-${s}`) }} />
+    <div className="fa fa-recap" ref={box}>
+      <span className="glow-a" />
+      <span className="glow-b" />
+      <div key={run} className="fa-stage cover" style={{ width: COVER_W, height: COVER_H, transform: `translate(-50%, -50%) scale(${s})` }}>
+        <span className="label cover-in" style={{ animation: 'popIn .6s cubic-bezier(.16,1,.3,1) both' }}>Fall 2026</span>
+        <h4 className="cover-title" aria-label="Your fall, in letters">
+          <span className="mask"><span style={{ animationDelay: '.1s' }}>Your fall,</span></span>
+          <span className="mask"><span style={{ animationDelay: '.22s' }}>in letters</span></span>
+        </h4>
+        <div className="cover-stack">
+          {POSTAGE.map((p, k) => (
+            <div key={p} className="postage-wrap" style={{ left: 30 + k * 52, top: k === 1 ? 0 : 18, '--tilt': `${[-9, 3, 11][k]}deg`, zIndex: k === 1 ? 2 : 1, animationDelay: `${0.35 + [0.08, 0, 0.16][k]}s` }}>
+              <div className="postage"><img src={media(p)} alt="" /></div>
+            </div>
+          ))}
+        </div>
+        <span className="small cover-stats">9 letters · 8 photos · 1 voice note</span>
+      </div>
     </div>
   )
 }
