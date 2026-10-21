@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Lockup } from './LumenMark.jsx'
 import { holo } from './FeatureArt.jsx'
 
@@ -9,14 +9,24 @@ import { holo } from './FeatureArt.jsx'
 
 const LILAC = holo(['#d9ccfa', '#b9d6fa', '#ffd3e2', '#c7b6f2', '#efe9fd'])
 // When each beat starts, in ms.
-const BEATS = [['logo', 0], ['out', 1400], ['letter', 1800], ['open', 2700], ['rise', 3200], ['expand', 3900], ['done', 4900]]
+const BEATS = [['logo', 0], ['out', 1400], ['letter', 2000], ['open', 2900], ['rise', 3400], ['expand', 4100], ['done', 5100]]
+
+// The letter is a full-window page scaled to fit inside the envelope. The envelope's size comes from
+// its CSS (min(78vw, 320px) wide, 202:136), and it's centered in the full-window intro, so the window's
+// corner sits at -(left, top) in its coordinates.
+function letterFit() {
+  const vw = window.innerWidth, vh = window.innerHeight
+  const ew = Math.min(vw * 0.78, 320), eh = (ew * 136) / 202
+  const k = Math.min((ew * 0.88) / vw, (eh * 0.84) / vh)
+  return { k, x: (ew - vw * k) / 2, y: eh - vh * k - eh * 0.06, lift: vh * k * 0.62, left: (vw - ew) / 2, top: (vh - eh) / 2 }
+}
 
 export default function Intro({ onDone, preview }) {
   const [beat, setBeat] = useState('logo')
-  const [fit, setFit] = useState(null) // where the letter sits in the envelope
+  // Where the letter sits in the envelope, worked out up front so it never shows at the wrong size.
+  const [fit] = useState(letterFit)
   const done = useRef(onDone)
   done.current = onDone
-  const env = useRef(null)
   const letter = useRef(null)
 
   useEffect(() => {
@@ -35,16 +45,6 @@ export default function Intro({ onDone, preview }) {
   const at = (b) => BEATS.findIndex(([x]) => x === beat) >= BEATS.findIndex(([x]) => x === b)
   const showLetter = at('letter')
 
-  // Size the letter from the envelope and the window: a full-window page, scaled to fit inside.
-  useLayoutEffect(() => {
-    if (!showLetter || fit) return
-    const e = env.current
-    const vw = window.innerWidth, vh = window.innerHeight, ew = e.offsetWidth, eh = e.offsetHeight
-    const k = Math.min((ew * 0.88) / vw, (eh * 0.84) / vh)
-    // The envelope is centered in the full-window intro, so the window's corner is at -(left, top) in its coordinates.
-    setFit({ k, x: (ew - vw * k) / 2, y: eh - vh * k - eh * 0.06, lift: vh * k * 0.62, left: (vw - ew) / 2, top: (vh - eh) / 2 })
-  }, [showLetter, fit])
-
   // Just before it grows, line the letter's spinning photo ring up with the real one behind it.
   useEffect(() => {
     if (beat !== 'expand' || !letter.current) return
@@ -54,13 +54,10 @@ export default function Intro({ onDone, preview }) {
     if (a && b) b.currentTime = a.currentTime
   }, [beat])
 
-  let letterStyle = { opacity: 0 }
-  if (fit) {
-    letterStyle = at('expand')
-      // Grow to the window: undo the envelope's offset, full scale.
-      ? { transform: `translate(${-fit.left}px, ${-fit.top}px) scale(1)`, borderRadius: 0, zIndex: 6 }
-      : { transform: `translate(${fit.x}px, ${fit.y - (at('rise') ? fit.lift : 0)}px) scale(${fit.k})`, borderRadius: 12 / fit.k }
-  }
+  const letterStyle = at('expand')
+    // Grow to the window: undo the envelope's offset, full scale.
+    ? { transform: `translate(${-fit.left}px, ${-fit.top}px) scale(1)`, borderRadius: 0, zIndex: 6 }
+    : { transform: `translate(${fit.x}px, ${fit.y - (at('rise') ? fit.lift : 0)}px) scale(${fit.k})`, borderRadius: 12 / fit.k }
 
   return (
     <div className={`intro${at('expand') ? ' leaving' : ''}`} onClick={() => done.current()} role="presentation">
@@ -70,7 +67,7 @@ export default function Intro({ onDone, preview }) {
       <Lockup size={44} wordSize={64} gap={12} className={`intro-lockup${at('out') ? ' out' : ''}`} />
 
       {showLetter ? (
-        <div ref={env} className={`ienv${at('open') ? ' open' : ''}${at('expand') ? ' expand' : ''}`} aria-hidden="true">
+        <div className={`ienv${at('open') ? ' open' : ''}${at('expand') ? ' expand' : ''}`} aria-hidden="true">
           <span className="ienv-back holo" style={{ '--holo': LILAC }} />
           <div ref={letter} className="ienv-letter" style={letterStyle}>{preview}</div>
           <span className="ienv-front holo" style={{ '--holo': LILAC }} />
