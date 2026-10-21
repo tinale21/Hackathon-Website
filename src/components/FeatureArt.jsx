@@ -9,9 +9,9 @@ const media = (f) => `${import.meta.env.BASE_URL}media/${f}`
 const calm = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
 
 const PROMPTS = {
-  sound: { img: 'prompt-sound.webp', imgSize: 'cover', imgPos: '50% 100%', imgBg: '#d8f7ec', veil: .06, fade: .6, lead: 'A sound from', accentText: 'where you are', sub: 'ten seconds is plenty', desc: 'The studio fan, the bus, the rain, your roommate laughing. Let them hear your day.', card: ['#d2f0ec', '#7fd0c6'], grad: ['#1f9488', '#5cc5b8'], ink: '#0d3a35' },
-  smile: { img: 'prompt-smile.webp', imgSize: 'cover', imgPos: '50% 100%', imgBg: '#fac57f', veil: .06, fade: .6, lead: 'Something that', accentText: 'made you smile', sub: 'even for a second', desc: 'A sky, a snack, a friend’s face, a sticker on a lamp post. Tiny counts.', card: ['#fbf0c7', '#efd06a'], grad: ['#a86a08', '#c98a1c'], ink: '#3d300a' },
-  home: { img: 'prompt-home.webp', imgSize: 'cover', imgPos: '50% 100%', imgBg: '#dedff6', veil: .06, fade: .6, lead: 'What do you', accentText: 'miss from home?', sub: 'a taste, a place, a habit', desc: 'Something small you didn’t notice until you left. They might be able to send a little piece of it.', card: ['#fadde8', '#f2a7c3'], grad: ['#d94f86', '#f08bb4'], ink: '#4a1430' },
+  sound: { img: 'prompt-sound.jpg', imgSize: 'cover', imgPos: '50% 100%', imgBg: '#d8f7ec', veil: .06, fade: .6, lead: 'A sound from', accentText: 'where you are', sub: 'ten seconds is plenty', desc: 'The studio fan, the bus, the rain, your roommate laughing. Let them hear your day.', card: ['#d2f0ec', '#7fd0c6'], grad: ['#1f9488', '#5cc5b8'], ink: '#0d3a35' },
+  smile: { img: 'prompt-smile.jpg', imgSize: 'cover', imgPos: '50% 100%', imgBg: '#fac57f', veil: .06, fade: .6, lead: 'Something that', accentText: 'made you smile', sub: 'even for a second', desc: 'A sky, a snack, a friend’s face, a sticker on a lamp post. Tiny counts.', card: ['#fbf0c7', '#efd06a'], grad: ['#a86a08', '#c98a1c'], ink: '#3d300a' },
+  home: { img: 'prompt-home.jpg', imgSize: 'cover', imgPos: '50% 100%', imgBg: '#dedff6', veil: .06, fade: .6, lead: 'What do you', accentText: 'miss from home?', sub: 'a taste, a place, a habit', desc: 'Something small you didn’t notice until you left. They might be able to send a little piece of it.', card: ['#fadde8', '#f2a7c3'], grad: ['#d94f86', '#f08bb4'], ink: '#4a1430' },
 }
 
 const paint = (p) => `${p.fade ? `linear-gradient(transparent 82%, rgba(255,255,255,${p.fade}) 93%), ` : ''}linear-gradient(rgba(255,255,255,${p.veil}), rgba(255,255,255,${p.veil})), url(${media(p.img)}) ${p.imgPos}/${p.imgSize} no-repeat, ${p.imgBg}`
@@ -90,8 +90,11 @@ const CAM_W = 342, CAM_H = 360
 function Working() {
   const box = useRef(null)
   const s = useFit(box, 0.9, CAM_H)
-  const [phase, setPhase] = useState('ready') // ready → press → taken
+  // ready → press → taken. With reduced motion it holds on the taken photo, which tells the story in one frame.
+  const [phase, setPhase] = useState(() => (calm() ? 'taken' : 'ready'))
   useEffect(() => {
+    // Fetch the photo now, so it's there the moment the shutter fires.
+    new Image().src = media('desk-working.jpg')
     if (calm()) return
     const steps = { ready: ['press', 2200], press: ['taken', 260], taken: ['ready', 3400] }
     let t
@@ -105,7 +108,7 @@ function Working() {
       <div className="fa-stage" style={{ width: CAM_W, height: CAM_H, transform: `translate(-50%, -50%) scale(${s})` }}>
         <div className="cam">
           {taken
-            ? <img key="shot" src={media('desk-working.jpg')} alt="" className="cam-shot" />
+            ? <img key="shot" src={media('desk-working.jpg')} alt="" className="cam-shot" decoding="async" />
             : <>
                 <span className="cam-ph">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg>
@@ -153,7 +156,7 @@ function Stamps() {
           const style = { transform: `translate(calc(-50% + ${d * 78}%), -50%) rotate(${d * 5 - 3}deg) scale(${1 - Math.min(1, a) * 0.3})`, opacity: a > 1 ? 0 : 1 }
           return (
             <span key={id} className="stamp" data-d={d} style={style}>
-              <img src={media(`stamp-${id}.jpg`)} alt="" />
+              <img loading="lazy" decoding="async" src={media(`stamp-${id}.jpg`)} alt="" />
               <b>{label}</b>
             </span>
           )
@@ -259,7 +262,7 @@ function Voice() {
 
 /* A semester recap: the Recap book's cover (Receive.jsx). Its entrance replays every few seconds. */
 const COVER_W = 390, COVER_H = 400
-const POSTAGE = ['mom-changi.webp', 'me-six-flags.webp', 'mom-albania-still.webp']
+const POSTAGE = ['mom-changi.jpg', 'me-six-flags.jpg', 'mom-albania-still.jpg']
 function Recap() {
   const box = useRef(null)
   const s = useFit(box, 0.92, COVER_H)
@@ -282,7 +285,7 @@ function Recap() {
         <div className="cover-stack">
           {POSTAGE.map((p, k) => (
             <div key={p} className="postage-wrap" style={{ left: 30 + k * 52, top: k === 1 ? 0 : 18, '--tilt': `${[-9, 3, 11][k]}deg`, zIndex: k === 1 ? 2 : 1, animationDelay: `${0.35 + [0.08, 0, 0.16][k]}s` }}>
-              <div className="postage"><img src={media(p)} alt="" /></div>
+              <div className="postage"><img loading="lazy" decoding="async" src={media(p)} alt="" /></div>
             </div>
           ))}
         </div>

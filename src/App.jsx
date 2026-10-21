@@ -28,9 +28,10 @@ function transition(update, after) {
 
 export default function App() {
   const [page, setPage] = useState(isGallery() ? 'gallery' : 'home')
-  // The intro plays once per visit (browser session), and not when someone lands straight on the gallery.
+  // The intro plays once per visit (browser session), not when someone lands straight on the gallery,
+  // and not at all with reduced motion.
   const [intro, setIntro] = useState(() => {
-    if (isGallery()) return false
+    if (isGallery() || calm()) return false
     try { return !sessionStorage.getItem('lumen-intro') } catch { return true }
   })
   const endIntro = () => {
@@ -179,7 +180,7 @@ const gallerySrc = GALLERY_URL && (/^https?:/.test(GALLERY_URL) ? GALLERY_URL : 
 
 function GalleryView({ preview }) {
   return gallerySrc
-    ? <iframe src={gallerySrc} title="Lumen video gallery" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen tabIndex={preview ? -1 : undefined} />
+    ? <iframe src={gallerySrc} title="Lumen video gallery" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen loading={preview ? 'lazy' : undefined} tabIndex={preview ? -1 : undefined} />
     : (
       <div className="gallery-soon">
         <span className="video-holo" aria-hidden="true" />
@@ -241,12 +242,20 @@ function Demo() {
   const [step, setStep] = useState('splash')
   const [reload, setReload] = useState(0)
   const [scale, setScale] = useState(1)
+  const [near, setNear] = useState(false)
 
   // The prototype is laid out for a 390 × 844 phone; scale it down to fit the space instead of squeezing it.
   useEffect(() => {
     const ro = new ResizeObserver(([e]) => setScale(e.contentRect.width / 390))
     ro.observe(box.current)
     return () => ro.disconnect()
+  }, [])
+
+  // The prototype is heavy (videos, photos), so it only starts loading once the Demo is about a screen away.
+  useEffect(() => {
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setNear(true); io.disconnect() } }, { rootMargin: '100% 0px' })
+    io.observe(box.current)
+    return () => io.disconnect()
   }, [])
 
   const jump = (id) => {
@@ -287,7 +296,7 @@ function Demo() {
             <iframe
               key={reload}
               ref={frame}
-              src={DEMO}
+              src={near ? DEMO : undefined}
               title="Lumen prototype"
               allow="microphone; camera; autoplay"
               style={{ transform: `scale(${scale})` }}
@@ -317,7 +326,7 @@ function Team() {
       <div className="team">
         {TEAM.map((p) => (
           <article key={p.name} className="person">
-            <img src={`${import.meta.env.BASE_URL}team/${p.photo}`} alt={`Portrait of ${p.name}`} loading="lazy" />
+            <img loading="lazy" decoding="async" src={`${import.meta.env.BASE_URL}team/${p.photo}`} alt={`Portrait of ${p.name}`} />
             <div className="person-row">
               <h3>{p.name}</h3>
               <a className="pill small outline" href={p.linkedin} target="_blank" rel="noreferrer" aria-label={`${p.name} on LinkedIn`}>LinkedIn ↗</a>
