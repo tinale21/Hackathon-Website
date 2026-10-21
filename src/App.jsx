@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { Lockup } from './components/LumenMark.jsx'
 import { FEATURE_ART } from './components/FeatureArt.jsx'
 import { GALLERY_URL } from './gallery.js'
@@ -6,14 +7,70 @@ import { GALLERY_URL } from './gallery.js'
 const media = (f) => `${import.meta.env.BASE_URL}media/${f}`
 const DEMO = 'https://tinale21.github.io/Hackathon/'
 
+/* ---------- Pages ----------
+   The site is one page, plus the Video Gallery on its own full-screen page at #/gallery.
+   Going there expands whatever was clicked (the gallery preview, the hero button or the nav link)
+   into the full page with a View Transition; closing shrinks it back. */
+const isGallery = () => window.location.hash === '#/gallery'
+const calm = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+let origin = '.gallery-frame' // what to shrink back into on close
+let homeY = 0
+
+function transition(update, after) {
+  if (!document.startViewTransition || calm()) { update(); if (after) after(); return }
+  const t = document.startViewTransition(() => flushSync(update))
+  // A skipped transition (say, in a background tab) rejects these; the page still updates.
+  t.ready.catch(() => {})
+  t.finished.catch(() => {}).then(() => { if (after) after() })
+}
+
 export default function App() {
+  const [page, setPage] = useState(isGallery() ? 'gallery' : 'home')
+  const pageRef = useRef(page)
+  pageRef.current = page
+
+  const openGallery = (e, from) => {
+    e.preventDefault()
+    origin = from
+    homeY = window.scrollY
+    const el = document.querySelector(from)
+    if (el) el.style.viewTransitionName = 'gallery'
+    transition(() => {
+      window.history.pushState({ lumenGallery: true }, '', '#/gallery')
+      setPage('gallery')
+      window.scrollTo(0, 0)
+    })
+  }
+
+  // Close button, or the browser's Back button.
+  useEffect(() => {
+    const onHash = () => {
+      if (isGallery()) { setPage('gallery'); return }
+      if (pageRef.current === 'home') return // an in-page link like #about
+      transition(() => {
+        flushSync(() => setPage('home'))
+        window.scrollTo(0, homeY)
+        const el = document.querySelector(origin)
+        if (el) el.style.viewTransitionName = 'gallery'
+      }, () => { const el = document.querySelector(origin); if (el) el.style.viewTransitionName = '' })
+    }
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+
+  const closeGallery = () => {
+    if (window.history.state && window.history.state.lumenGallery) window.history.back()
+    else { window.history.replaceState(null, '', window.location.pathname); window.dispatchEvent(new HashChangeEvent('hashchange')) }
+  }
+
+  if (page === 'gallery') return <GalleryPage onClose={closeGallery} />
   return (
     <>
-      <Header />
+      <Header openGallery={openGallery} />
       <main>
-        <Hero />
+        <Hero openGallery={openGallery} />
         <About />
-        <Gallery />
+        <Gallery openGallery={openGallery} />
         <Demo />
         <Team />
       </main>
@@ -23,16 +80,16 @@ export default function App() {
 }
 
 /* ---------- Header ---------- */
-function Header() {
+function Header({ openGallery }) {
   return (
     <header className="header">
       <div className="wrap header-row">
         <a href="#top" className="home-link" aria-label="Lumen, back to top"><Lockup /></a>
         <nav className="nav" aria-label="Sections">
-          <a href="#about">About</a>
-          <a href="#gallery">Video Gallery</a>
+          <a href="#about" className="nav-about">About</a>
+          <a href="#/gallery" className="nav-gallery" onClick={(e) => openGallery(e, '.nav-gallery')}>Video Gallery</a>
+          <a href="#demo">Try the demo</a>
           <a href="#team">Team</a>
-          <a href="#demo" className="pill small">Try the demo</a>
         </nav>
       </div>
     </header>
@@ -43,7 +100,7 @@ function Header() {
 // Eight photos in the same ring as the Lumen mark, the way the app's splash builds the logo.
 const TILES = ['1-cafe', '2-lake-poster', '3-sunglasses', '4-statues', '5-aquarium', '6-night-friends-poster', '7-six-flags', '8-night-street']
 
-function Hero() {
+function Hero({ openGallery }) {
   return (
     <section id="top" className="hero wrap">
       <div className="hero-text rise">
@@ -52,7 +109,7 @@ function Hero() {
         <p className="lede">Lumen is a sealed letter between immigrant and international art students and their families. A few short prompts let each side show what the week really took, not just how it turned out.</p>
         <div className="actions">
           <a href="#demo" className="pill">Try the demo</a>
-          <a href="#gallery" className="pill ghost">Visit the video gallery</a>
+          <a href="#/gallery" className="pill ghost hero-gallery" onClick={(e) => openGallery(e, '.hero-gallery')}>Visit the video gallery</a>
         </div>
       </div>
       <div className="ring-wrap rise" style={{ animationDelay: '.12s' }} aria-hidden="true">
@@ -102,9 +159,22 @@ function About() {
 }
 
 /* ---------- Gallery ---------- */
-// The gallery is its own prototype, built by a teammate. Point GALLERY_URL (src/gallery.js) at it to embed it here.
-function Gallery() {
-  const src = GALLERY_URL && (/^https?:/.test(GALLERY_URL) ? GALLERY_URL : `${import.meta.env.BASE_URL}${GALLERY_URL}`)
+// The gallery is its own prototype, built by a teammate. Point GALLERY_URL (src/gallery.js) at it.
+const gallerySrc = GALLERY_URL && (/^https?:/.test(GALLERY_URL) ? GALLERY_URL : `${import.meta.env.BASE_URL}${GALLERY_URL}`)
+
+function GalleryView({ preview }) {
+  return gallerySrc
+    ? <iframe src={gallerySrc} title="Lumen video gallery" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen tabIndex={preview ? -1 : undefined} />
+    : (
+      <div className="gallery-soon">
+        <span className="video-holo" aria-hidden="true" />
+        {preview ? null : <span className="play">The video gallery opens here soon</span>}
+      </div>
+    )
+}
+
+// On the home page: a preview of the gallery. Clicking it expands into the full-screen page.
+function Gallery({ openGallery }) {
   return (
     <section id="gallery" className="section wrap">
       <div className="section-head">
@@ -112,22 +182,31 @@ function Gallery() {
         <h2 className="display sm">The films</h2>
         <p className="lede">Walk through Lumen like an art gallery. Each screen is a short film about a student and a parent finding the middle of the story.</p>
       </div>
-      <div className="gallery-frame">
-        {src
-          ? <iframe src={src} title="Lumen video gallery" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen />
-          : (
-            <div className="gallery-soon">
-              <span className="video-holo" aria-hidden="true" />
-              <span className="play">The video gallery opens here soon</span>
-            </div>
-          )}
-      </div>
-      {src && (
-        <div className="frame-links">
-          <a className="pill small outline" href={src} target="_blank" rel="noreferrer">Open full screen ↗</a>
-        </div>
-      )}
+      <a href="#/gallery" className="gallery-frame gallery-link" onClick={(e) => openGallery(e, '.gallery-frame')} aria-label="Enter the video gallery">
+        <GalleryView preview />
+        <span className="gallery-enter"><span className="play">Enter the video gallery →</span></span>
+      </a>
     </section>
+  )
+}
+
+function GalleryPage({ onClose }) {
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
+  return (
+    <div className="gpage">
+      <header className="gpage-bar">
+        <a href="#top" className="home-link" aria-label="Lumen, back to the site" onClick={(e) => { e.preventDefault(); onClose() }}><Lockup /></a>
+        <span className="label">Video Gallery</span>
+        <button className="pill small ghost" onClick={onClose}>Close ✕</button>
+      </header>
+      <div className="gpage-frame" style={{ viewTransitionName: 'gallery' }}>
+        <GalleryView />
+      </div>
+    </div>
   )
 }
 

@@ -15,7 +15,7 @@ https://tinale21.github.io/Hackathon-Website/
 
 ## Adding the Gallery
 
-The Gallery is its own click-through prototype, built by a teammate. The site embeds it in a wide frame, the same way the Demo embeds the app. Until it's connected, the frame shows "The gallery opens here soon."
+The Gallery is its own click-through prototype, built by a teammate. It gets its own full-screen page at `#/gallery`. The home page shows a preview that expands into that page when clicked, and so do the nav link and the hero button. Until the gallery is connected, the page shows "The video gallery opens here soon."
 
 To connect it, set `GALLERY_URL` in [`src/gallery.js`](src/gallery.js):
 
