@@ -262,15 +262,14 @@ img { max-width: 100%; }
 
 /* ---------- Intro (src/components/Intro.jsx): logo, then a letter that opens into the site ---------- */
 .intro { position: fixed; inset: 0; z-index: 100; overflow: hidden; display: grid; place-items: center; background: var(--desk); cursor: pointer; transition: background .7s ease; }
-.intro.leaving { background: rgba(241, 242, 246, 0); pointer-events: none; }
+.intro.leaving { pointer-events: none; }
 .intro.leaving .intro-glow, .intro.leaving .intro-skip { opacity: 0; }
 .intro-glow { position: absolute; width: 70vmax; aspect-ratio: 1; border-radius: 50%; filter: blur(60px); opacity: .9; pointer-events: none; transition: opacity .5s ease; }
 .intro-glow.a { left: -25vmax; top: -30vmax; background: radial-gradient(circle, #d6c8f6 0%, rgba(214,200,246,0) 65%); animation: glowA 13s ease-in-out infinite alternate; }
 .intro-glow.b { right: -25vmax; bottom: -35vmax; background: radial-gradient(circle, #ffd3c4 0%, rgba(255,211,196,0) 65%); animation: glowB 16s ease-in-out infinite alternate; }
 
-.intro-lockup { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 12px; animation: lockIn 1s cubic-bezier(.25, 1, .5, 1) both; transition: opacity .5s ease, transform .6s var(--ease), filter .5s ease; }
-.intro-lockup span { font-family: var(--serif); font-weight: 500; font-size: 64px; line-height: 1; letter-spacing: -.015em; color: #111214; transform: translateY(-4px); }
-.intro-lockup svg { animation: markSpin 1.4s cubic-bezier(.25, 1, .5, 1) both; }
+.intro-lockup { grid-area: 1 / 1; animation: lockIn 1s cubic-bezier(.25, 1, .5, 1) both; transition: opacity .5s ease, transform .6s var(--ease), filter .5s ease; }
+.intro-lockup .lumen-mark g { transform-box: fill-box; transform-origin: center; animation: markSpin 1.4s cubic-bezier(.25, 1, .5, 1) both; }
 .intro-lockup.out { opacity: 0; transform: translateY(-40px) scale(.92); filter: blur(6px); }
 @keyframes lockIn { from { opacity: 0; filter: blur(10px); transform: scale(.94); } to { opacity: 1; filter: none; transform: none; } }
 @keyframes markSpin { from { transform: rotate(-120deg) scale(.6); } to { transform: none; } }
@@ -283,24 +282,21 @@ img { max-width: 100%; }
 .ienv-flap { clip-path: polygon(0 0, 100% 0, 50% 58%); z-index: 4; transform-origin: 50% 0; transition: transform .5s cubic-bezier(.5, 0, .3, 1), z-index 0s .25s; }
 .ienv-flap::after { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(255,255,255,.35), rgba(255,255,255,0) 70%); }
 .ienv-seal { left: 50% !important; top: 58% !important; right: auto !important; bottom: auto !important; width: 16%; aspect-ratio: 1; inset: auto; transform: translate(-50%, -50%); border-radius: 50% !important; background: #fff; opacity: .92; z-index: 5; box-shadow: 0 0 0 6px rgba(255,255,255,.35); }
-.ienv-letter { inset: 6% 5% 8% 5% !important; z-index: 2; background: #fffdf9; border-radius: 10px !important; box-shadow: 0 10px 30px rgba(29,29,34,.10); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 12px; text-align: center; transition: transform .7s cubic-bezier(.2, .8, .2, 1); }
-.ienv-mark { display: flex; }
-.ienv-line { font-family: var(--serif); font-size: 22px; line-height: 1.1; letter-spacing: -.02em; color: var(--ink); }
+.ienv-letter { position: absolute; left: 0; top: 0; width: 100vw; height: 100vh; z-index: 2; overflow: hidden; background: var(--desk); transform-origin: 0 0; pointer-events: none; box-shadow: 0 30px 80px rgba(29,29,34,.18); transition: transform .7s cubic-bezier(.2, .8, .2, 1), border-radius .7s ease; }
+.ienv-letter .rise { animation: none; }
 
 .ienv.open .ienv-seal { animation: sealBreak .4s cubic-bezier(.3, 1.6, .5, 1) both; }
 .ienv.open .ienv-flap { transform: rotateX(180deg); z-index: 1; }
-.ienv.rise .ienv-letter { transform: translateY(-62%); } /* its bottom stays tucked in the pocket */
 /* The letter grows to fill the screen while the envelope drops away, and the site shows through. */
 .ienv.expand { animation: none; }
 .ienv.expand .ienv-back, .ienv.expand .ienv-front, .ienv.expand .ienv-flap { transform: translateY(40vh); opacity: 0; transition: transform .6s cubic-bezier(.5, 0, .75, 0), opacity .5s ease; }
-.ienv.expand .ienv-letter { z-index: 6; transform: translateY(-62%) scale(9); opacity: 0; transition: transform .7s cubic-bezier(.5, 0, .2, 1), opacity .5s ease .2s; }
+.ienv.expand .ienv-letter { box-shadow: none; transition: transform .9s cubic-bezier(.65, 0, .35, 1), border-radius .9s ease, box-shadow .9s ease; }
 @keyframes envDrop { from { opacity: 0; transform: translateY(40px) scale(.9); } to { opacity: 1; transform: none; } }
 @keyframes sealBreak { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(.75); } 100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; } }
 
 .intro-skip { position: absolute; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--ink-3); transition: opacity .4s ease; }
 @media (max-width: 600px) {
-  .intro-lockup span { font-size: 48px; }
-  .ienv-line { font-size: 18px; }
+  .intro-lockup .lockup-word { font-size: 48px !important; }
 }
 
 /* ---------- Motion ---------- */

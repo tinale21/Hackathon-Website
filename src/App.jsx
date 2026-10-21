@@ -13,6 +13,7 @@ const DEMO = 'https://tinale21.github.io/Hackathon/'
    Going there expands whatever was clicked (the gallery preview, the hero button or the nav link)
    into the full page with a View Transition; closing shrinks it back. */
 const isGallery = () => window.location.hash === '#/gallery'
+const noop = (e) => e.preventDefault()
 const calm = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
 let origin = '.gallery-frame' // what to shrink back into on close
 let homeY = 0
@@ -76,11 +77,10 @@ export default function App() {
   if (page === 'gallery') return <GalleryPage onClose={closeGallery} />
   return (
     <>
-      {intro ? <Intro onDone={endIntro} /> : null}
+      {intro ? <Intro onDone={endIntro} preview={<><Header openGallery={noop} /><Hero preview openGallery={noop} /></>} /> : null}
       <Header openGallery={openGallery} />
       <main>
-        {/* Keyed on the intro so the hero's entrance plays as the intro lifts away. */}
-        <Hero key={intro ? 'behind' : 'shown'} openGallery={openGallery} />
+        <Hero openGallery={openGallery} />
         <About />
         <Gallery openGallery={openGallery} />
         <Demo />
@@ -112,9 +112,10 @@ function Header({ openGallery }) {
 // Eight photos in the same ring as the Lumen mark, the way the app's splash builds the logo.
 const TILES = ['1-cafe', '2-lake-poster', '3-sunglasses', '4-statues', '5-aquarium', '6-night-friends-poster', '7-six-flags', '8-night-street']
 
-function Hero({ openGallery }) {
+// `preview` is the copy drawn on the intro's letter: no id, so the real hero keeps #top.
+function Hero({ openGallery, preview }) {
   return (
-    <section id="top" className="hero wrap">
+    <section id={preview ? undefined : 'top'} className="hero wrap">
       <div className="hero-text rise">
         <p className="label">Made for the SVSD Design Sprint</p>
         <h1 className="display">Share the middle of the&nbsp;story.</h1>
