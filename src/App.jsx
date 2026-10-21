@@ -241,7 +241,7 @@ function Footer() {
     <footer className="footer">
       <div className="wrap footer-row">
         <Lockup size={20} />
-        <p className="small">Share the middle of the story. Made for the SVSD Design Sprint, 2026.</p>
+        <p className="small">Made for the SVSD Design Sprint, 2026.</p>
         <a href="#top" className="small">Back to top ↑</a>
       </div>
     </footer>
