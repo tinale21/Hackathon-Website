@@ -148,6 +148,13 @@ img { max-width: 100%; }
 .device { position: sticky; top: 88px; width: min(390px, calc(100vw - 48px), calc((100svh - 190px) * 390 / 844)); aspect-ratio: 390 / 844; border-radius: 48px; overflow: hidden; background: var(--screen); box-shadow: 0 40px 100px rgba(29, 29, 34, 0.12), 0 0 0 1px rgba(29, 29, 34, .04); }
 .device iframe { width: 390px; height: 844px; border: 0; display: block; transform-origin: 0 0; }
 
+/* Team */
+.team { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.person { background: #fff; border-radius: var(--r-lg); padding: 10px 10px 16px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; gap: 14px; }
+.person img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--r-md); background: var(--fill); }
+.person-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 8px; flex-wrap: wrap; }
+.person h3 { font-size: 18px; font-weight: 500; margin: 0; }
+
 /* Footer */
 .footer { padding-block: 40px calc(40px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid #e2e4ea; }
 .footer-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
@@ -178,7 +185,7 @@ img { max-width: 100%; }
   .nav a:not(.pill) { display: none; }
   .section { padding-block: 64px; gap: 32px; }
   .lede { font-size: 16px; }
-  .sides, .features, .principles { grid-template-columns: 1fr; }
+  .sides, .features, .principles, .team { grid-template-columns: 1fr; }
   .videos { grid-template-columns: 1fr; }
   .device { border-radius: 36px; width: min(390px, calc(100vw - 32px), calc((100svh - 100px) * 390 / 844)); }
 }

@@ -14,6 +14,7 @@ export default function App() {
         <About />
         <Gallery />
         <Demo />
+        <Team />
       </main>
       <Footer />
     </>
@@ -29,6 +30,7 @@ function Header() {
         <nav className="nav" aria-label="Sections">
           <a href="#about">About</a>
           <a href="#gallery">Gallery</a>
+          <a href="#team">Team</a>
           <a href="#demo" className="pill small">Try the demo</a>
         </nav>
       </div>
@@ -258,6 +260,35 @@ function Demo() {
             style={{ transform: `scale(${scale})` }}
           />
         </div>
+      </div>
+    </section>
+  )
+}
+
+/* ---------- Team ---------- */
+const TEAM = [
+  { name: 'Audrey Keziah Castro', photo: 'audrey.jpg', linkedin: 'https://www.linkedin.com/in/audreykeziahdesign/' },
+  { name: 'Tina Le', photo: 'tina.jpg', linkedin: 'https://www.linkedin.com/in/tinanle05' },
+  { name: 'Tana Su', photo: 'tana.jpg', linkedin: 'https://www.linkedin.com/in/tana-su-91651a387/' },
+]
+
+function Team() {
+  return (
+    <section id="team" className="section wrap">
+      <div className="section-head">
+        <p className="label">Team</p>
+        <h2 className="display sm">Made by</h2>
+      </div>
+      <div className="team">
+        {TEAM.map((p) => (
+          <article key={p.name} className="person">
+            <img src={`${import.meta.env.BASE_URL}team/${p.photo}`} alt={`Portrait of ${p.name}`} loading="lazy" />
+            <div className="person-row">
+              <h3>{p.name}</h3>
+              <a className="pill small outline" href={p.linkedin} target="_blank" rel="noreferrer" aria-label={`${p.name} on LinkedIn`}>LinkedIn ↗</a>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
   )
