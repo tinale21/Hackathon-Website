@@ -29,7 +29,7 @@ function Header() {
         <a href="#top" className="home-link" aria-label="Lumen, back to top"><Lockup /></a>
         <nav className="nav" aria-label="Sections">
           <a href="#about">About</a>
-          <a href="#gallery">Gallery</a>
+          <a href="#gallery">Video Gallery</a>
           <a href="#team">Team</a>
           <a href="#demo" className="pill small">Try the demo</a>
         </nav>
@@ -51,7 +51,7 @@ function Hero() {
         <p className="lede">Lumen is a sealed letter between immigrant and international art students and their families. A few short prompts let each side show what the week really took, not just how it turned out.</p>
         <div className="actions">
           <a href="#demo" className="pill">Try the demo</a>
-          <a href="#gallery" className="pill ghost">Visit the gallery</a>
+          <a href="#gallery" className="pill ghost">Visit the video gallery</a>
         </div>
       </div>
       <div className="ring-wrap rise" style={{ animationDelay: '.12s' }} aria-hidden="true">
@@ -136,17 +136,17 @@ function Gallery() {
   return (
     <section id="gallery" className="section wrap">
       <div className="section-head">
-        <p className="label">Gallery</p>
+        <p className="label">Video Gallery</p>
         <h2 className="display sm">The films</h2>
         <p className="lede">Walk through Lumen like an art gallery. Each screen is a film from the life of one family: Audrey, an art student, and her mom.</p>
       </div>
       <div className="gallery-frame">
         {src
-          ? <iframe src={src} title="Lumen gallery" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen />
+          ? <iframe src={src} title="Lumen video gallery" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen />
           : (
             <div className="gallery-soon">
               <span className="video-holo" aria-hidden="true" />
-              <span className="play">The gallery opens here soon</span>
+              <span className="play">The video gallery opens here soon</span>
             </div>
           )}
       </div>
