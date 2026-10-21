@@ -236,6 +236,15 @@ const STEPS = [
   { id: 'recap', title: 'The recap' },
 ]
 
+// Which step each prototype screen belongs to, so the list follows along when someone taps through the phone.
+const STEP_OF = {
+  splash: 'splash', reveal: 'splash', q1: 'splash', q2: 'splash', q3: 'splash', q4: 'splash', celebrate: 'splash', welcome: 'splash',
+  home: 'home', pulse: 'home',
+  prompt: 'prompt', capture: 'prompt', write: 'prompt', paper: 'prompt', caption: 'prompt', sent: 'prompt',
+  mail: 'mail', read: 'mail', reply: 'mail', history: 'mail',
+  recap: 'recap',
+}
+
 function Demo() {
   const frame = useRef(null)
   const box = useRef(null)
@@ -249,6 +258,17 @@ function Demo() {
     const ro = new ResizeObserver(([e]) => setScale(e.contentRect.width / 390))
     ro.observe(box.current)
     return () => ro.disconnect()
+  }, [])
+
+  // The prototype announces each screen it shows (Hackathon/src/App.jsx); highlight that screen's step.
+  useEffect(() => {
+    const onMessage = (e) => {
+      if (!frame.current || e.source !== frame.current.contentWindow || !e.data || !e.data.lumenRoute) return
+      const s = STEP_OF[e.data.lumenRoute]
+      if (s) setStep(s)
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
   }, [])
 
   // The prototype is heavy (videos, photos), so it only starts loading once the Demo is about a screen away.
@@ -326,10 +346,10 @@ function Team() {
       <div className="team">
         {TEAM.map((p) => (
           <article key={p.name} className="person">
-            <img loading="lazy" decoding="async" src={`${import.meta.env.BASE_URL}team/${p.photo}`} alt={`Portrait of ${p.name}`} />
+            <div className="person-photo"><img loading="lazy" decoding="async" src={`${import.meta.env.BASE_URL}team/${p.photo}`} alt={`Portrait of ${p.name}`} /></div>
             <div className="person-row">
               <h3>{p.name}</h3>
-              <a className="pill small outline" href={p.linkedin} target="_blank" rel="noreferrer" aria-label={`${p.name} on LinkedIn`}>LinkedIn ↗</a>
+              <a className="pill small outline" href={p.linkedin} target="_blank" rel="noreferrer" aria-label={`${p.name} on LinkedIn`}>LinkedIn <span className="arrow" aria-hidden="true">↗</span></a>
             </div>
           </article>
         ))}
