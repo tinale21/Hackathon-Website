@@ -79,7 +79,8 @@ img { max-width: 100%; }
   radial-gradient(circle at 70% 30%, #c8b6f2 0%, rgba(200,182,242,0) 55%),
   radial-gradient(circle at 30% 25%, #b9d6fa 0%, rgba(185,214,250,0) 55%); }
 .ring { position: absolute; inset: 0; animation: spin 80s linear infinite; }
-.petal { position: absolute; left: 50%; top: 50%; width: 17%; aspect-ratio: 30 / 42; border-radius: 18% / 13%; background: #ddd center / cover; box-shadow: 0 10px 24px -8px rgba(20, 30, 45, .35); transform: translate(-50%, -50%) rotate(var(--a)) translateY(-150%); }
+/* Proportions match the Lumen mark: each petal is 7.71 × 10.80 at a radius of 21.6, so the gap reads the same as the logo. */
+.petal { position: absolute; left: 50%; top: 50%; width: 13.8%; aspect-ratio: 7.71 / 10.8; border-radius: 23% / 16.7%; background: #ddd center / cover; box-shadow: 0 10px 24px -8px rgba(20, 30, 45, .35); transform: translate(-50%, -50%) rotate(var(--a)) translateY(-200%); }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ---------- Sections ---------- */
