@@ -92,25 +92,6 @@ function About() {
         <p className="lede">Parents read outcomes as a measure of effort. In art, the two are loosely linked: critiques are subjective, progress is slow, and setbacks like visa delays are out of a student’s control. So students stop sharing and say “I’m fine.” Parents carry a hidden middle too: the sacrifice behind their expectations.</p>
       </div>
 
-      <div className="sides">
-        <div className="side">
-          <span className="dot" style={{ background: 'var(--lilac)' }} />
-          <h3>The student</h3>
-          <p><b>Sees</b> the whole process: critiques, rework, visa stress.</p>
-          <p><b>Hides</b> the struggle, because a weak result reads as “you didn’t try.”</p>
-        </div>
-        <div className="side">
-          <span className="dot" style={{ background: 'var(--peach)' }} />
-          <h3>The parent</h3>
-          <p><b>Sees</b> only outcomes: grades, jobs, polished posts.</p>
-          <p><b>Hides</b> their own sacrifice, worry and loneliness.</p>
-        </div>
-        <div className="side belief">
-          <h3 className="serif">Emotional connection needs the process, not just the outcome, in both directions.</h3>
-          <p>Lumen gives both sides a calm, sealed place to share it.</p>
-        </div>
-      </div>
-
       <div className="features">
         {FEATURES.map((f) => {
           const Art = FEATURE_ART[f.art]
