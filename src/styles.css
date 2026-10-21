@@ -73,14 +73,13 @@ img { max-width: 100%; }
 .hero-text { display: flex; flex-direction: column; gap: 24px; }
 .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
 
-.ring-wrap { position: relative; width: min(100%, 440px); aspect-ratio: 1; justify-self: center; display: grid; place-items: center; }
+.ring-wrap { position: relative; width: min(100%, 320px); aspect-ratio: 1; justify-self: center; display: grid; place-items: center; }
 .ring-wrap::before { content: ''; position: absolute; inset: 14%; border-radius: 50%; z-index: 0; filter: blur(40px); opacity: .7; background:
   radial-gradient(circle at 35% 60%, #ffc9b6 0%, rgba(255,201,182,0) 50%),
   radial-gradient(circle at 70% 30%, #c8b6f2 0%, rgba(200,182,242,0) 55%),
   radial-gradient(circle at 30% 25%, #b9d6fa 0%, rgba(185,214,250,0) 55%); }
 .ring { position: absolute; inset: 0; animation: spin 80s linear infinite; }
 .petal { position: absolute; left: 50%; top: 50%; width: 17%; aspect-ratio: 30 / 42; border-radius: 18% / 13%; background: #ddd center / cover; box-shadow: 0 10px 24px -8px rgba(20, 30, 45, .35); transform: translate(-50%, -50%) rotate(var(--a)) translateY(-150%); }
-.ring-word { position: relative; z-index: 1; font-family: var(--serif); font-weight: 500; font-size: clamp(36px, 4.4vw, 52px); letter-spacing: -.015em; color: #111214; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ---------- Sections ---------- */
@@ -252,7 +251,7 @@ img { max-width: 100%; }
 /* ---------- Narrow screens ---------- */
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; min-height: 0; padding-block: 32px 56px; }
-  .ring-wrap { width: min(100%, 360px); order: -1; }
+  .ring-wrap { width: min(100%, 260px); order: -1; }
   .features { grid-template-columns: 1fr 1fr; }
   .demo { grid-template-columns: 1fr; }
   /* Stacked: heading, then the phone, then the steps. */

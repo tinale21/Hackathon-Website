@@ -61,7 +61,6 @@ function Hero() {
             <span key={t} className="petal" style={{ '--a': `${i * 45}deg`, backgroundImage: `url(${media(`splash-tile-${t}.jpg`)})` }} />
           ))}
         </div>
-        <span className="ring-word">lumen</span>
       </div>
     </section>
   )
