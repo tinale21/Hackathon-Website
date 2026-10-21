@@ -226,7 +226,7 @@ img { max-width: 100%; }
 .step[aria-current='step'] .step-n { background: var(--ink); color: #fff; }
 .demo-links { display: flex; flex-wrap: wrap; gap: 10px; padding: 16px 18px 0; }
 
-.device { position: sticky; top: 88px; width: min(412px, calc(100vw - 48px), calc((100svh - 190px) * 412 / 866)); padding: 11px; border-radius: 60px; background: #1c1c20; box-shadow: inset 0 0 0 1.5px #4a4a52, 0 0 0 2px #c8c9cf, 0 0 0 3px #e9eaee, 0 40px 100px rgba(29, 29, 34, 0.18); }
+.device { position: relative; width: min(412px, calc(100vw - 48px), calc((100svh - 190px) * 412 / 866)); padding: 11px; border-radius: 60px; background: #1c1c20; box-shadow: inset 0 0 0 1.5px #4a4a52, 0 0 0 2px #c8c9cf, 0 0 0 3px #e9eaee, 0 40px 100px rgba(29, 29, 34, 0.18); }
 .device-screen { position: relative; aspect-ratio: 390 / 844; border-radius: 49px; overflow: hidden; background: var(--screen); }
 .device iframe { width: 390px; height: 844px; border: 0; display: block; transform-origin: 0 0; }
 .device-island { position: absolute; left: 50%; top: 1.3%; width: 31%; height: 4.1%; border-radius: 999px; background: #000; transform: translateX(-50%); pointer-events: none; z-index: 2; }
