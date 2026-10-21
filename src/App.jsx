@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { Lockup } from './components/LumenMark.jsx'
 import { FEATURE_ART } from './components/FeatureArt.jsx'
+import Intro from './components/Intro.jsx'
 import { GALLERY_URL } from './gallery.js'
 
 const media = (f) => `${import.meta.env.BASE_URL}media/${f}`
@@ -26,6 +27,15 @@ function transition(update, after) {
 
 export default function App() {
   const [page, setPage] = useState(isGallery() ? 'gallery' : 'home')
+  // The intro plays once per visit (browser session), and not when someone lands straight on the gallery.
+  const [intro, setIntro] = useState(() => {
+    if (isGallery()) return false
+    try { return !sessionStorage.getItem('lumen-intro') } catch { return true }
+  })
+  const endIntro = () => {
+    try { sessionStorage.setItem('lumen-intro', '1') } catch { /* private mode: it just plays again next time */ }
+    setIntro(false)
+  }
   const pageRef = useRef(page)
   pageRef.current = page
 
@@ -66,9 +76,11 @@ export default function App() {
   if (page === 'gallery') return <GalleryPage onClose={closeGallery} />
   return (
     <>
+      {intro ? <Intro onDone={endIntro} /> : null}
       <Header openGallery={openGallery} />
       <main>
-        <Hero openGallery={openGallery} />
+        {/* Keyed on the intro so the hero's entrance plays as the intro lifts away. */}
+        <Hero key={intro ? 'behind' : 'shown'} openGallery={openGallery} />
         <About />
         <Gallery openGallery={openGallery} />
         <Demo />

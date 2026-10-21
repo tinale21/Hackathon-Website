@@ -164,7 +164,7 @@ function Stamps() {
 }
 
 /* Sealed: the lilac holo envelope with a stamp, floating. */
-const holo = ([a, b, c, d, e]) => `radial-gradient(circle at 25% 25%, ${a} 0%, transparent 45%), radial-gradient(circle at 75% 30%, ${b} 0%, transparent 45%), radial-gradient(circle at 40% 75%, ${c} 0%, transparent 50%), radial-gradient(circle at 80% 80%, ${d} 0%, transparent 45%), ${e}`
+export const holo = ([a, b, c, d, e]) => `radial-gradient(circle at 25% 25%, ${a} 0%, transparent 45%), radial-gradient(circle at 75% 30%, ${b} 0%, transparent 45%), radial-gradient(circle at 40% 75%, ${c} 0%, transparent 50%), radial-gradient(circle at 80% 80%, ${d} 0%, transparent 45%), ${e}`
 function Sealed() {
   const k = 1.1
   return (
