@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Lockup } from './components/LumenMark.jsx'
+import { FEATURE_ART } from './components/FeatureArt.jsx'
 import { GALLERY_URL } from './gallery.js'
 
 const media = (f) => `${import.meta.env.BASE_URL}media/${f}`
@@ -68,12 +69,12 @@ function Hero() {
 
 /* ---------- About ---------- */
 const FEATURES = [
-  { title: 'Prompts, not a blank page', text: 'Each letter is a few short prompts picked for your family. Answer by photo, video, words or icons, and skip any of them.', art: 'words-sky.webp' },
-  { title: 'Show me working', text: 'Students can show the critique, the rework and the late nights, so parents see what the work took.', art: 'wins-sky.webp' },
-  { title: 'Say what you need', text: 'Listen, cheer me on, advice, support, space, a distraction or a taste of home. The stamp tells the reader how to respond.', art: 'happy-petals.webp' },
-  { title: 'Sealed, never a chat', text: 'Letters arrive sealed and open with a tap. No read receipts, no streaks, no live back-and-forth.', art: 'people-clouds.webp' },
-  { title: 'Write back in your voice', text: 'Parents reply by voice, words or photo, and share their own story through the same prompts.', art: 'voice-wave.webp' },
-  { title: 'A semester recap', text: 'After a semester, the letters become a recap of everything the two of you shared.', art: 'wins-star.webp' },
+  { title: 'Prompts, not a blank page', text: 'Each letter is a few short prompts picked for your family. Answer by photo, video, words or icons, and skip any of them.', art: 'deck' },
+  { title: 'Show me working', text: 'Students can show the critique, the rework and the late nights, so parents see what the work took.', art: 'working' },
+  { title: 'Say what you need', text: 'Listen, cheer me on, advice, support, space, a distraction or a taste of home. The stamp tells the reader how to respond.', art: 'stamps' },
+  { title: 'Sealed, never a chat', text: 'Letters arrive sealed and open with a tap. No read receipts, no streaks, no live back-and-forth.', art: 'sealed' },
+  { title: 'Write back in your voice', text: 'Parents reply by voice, words or photo, and share their own story through the same prompts.', art: 'voice' },
+  { title: 'A semester recap', text: 'After a semester, the letters become a recap of everything the two of you shared.', art: 'recap' },
 ]
 
 const PRINCIPLES = [
@@ -111,13 +112,16 @@ function About() {
       </div>
 
       <div className="features">
-        {FEATURES.map((f) => (
-          <article key={f.title} className="feature">
-            <div className="feature-art" style={{ backgroundImage: `url(${media(f.art)})` }} />
-            <h3>{f.title}</h3>
-            <p>{f.text}</p>
-          </article>
-        ))}
+        {FEATURES.map((f) => {
+          const Art = FEATURE_ART[f.art]
+          return (
+            <article key={f.title} className="feature">
+              <div className="feature-art"><Art /></div>
+              <h3>{f.title}</h3>
+              <p>{f.text}</p>
+            </article>
+          )
+        })}
       </div>
 
       <div className="principles">
