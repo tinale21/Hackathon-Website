@@ -108,8 +108,8 @@ function Hero({ openGallery }) {
         <h1 className="display">Share the middle of the&nbsp;story.</h1>
         <p className="lede">Lumen is a sealed letter between immigrant and international art students and their families. A few short prompts let each side show what the week really took, not just how it turned out.</p>
         <div className="actions">
-          <a href="#demo" className="pill">Try the demo</a>
-          <a href="#/gallery" className="pill ghost hero-gallery" onClick={(e) => openGallery(e, '.hero-gallery')}>Visit the video gallery</a>
+          <a href="#/gallery" className="pill hero-gallery" onClick={(e) => openGallery(e, '.hero-gallery')}>Visit the video gallery</a>
+          <a href="#demo" className="pill ghost">Try the demo</a>
         </div>
       </div>
       <div className="ring-wrap rise" style={{ animationDelay: '.12s' }} aria-hidden="true">
