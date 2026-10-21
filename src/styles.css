@@ -213,7 +213,7 @@ img { max-width: 100%; }
 .frame-links { display: flex; justify-content: center; margin-top: -24px; }
 
 /* Demo */
-.demo { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: start; }
+.demo { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center; }
 .demo-side { display: flex; flex-direction: column; gap: 32px; }
 .steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; max-width: 520px; }
 .step { width: 100%; display: flex; gap: 16px; align-items: center; text-align: left; border: none; background: transparent; padding: 14px 18px; border-radius: var(--r-md); transition: background .2s, box-shadow .2s; }
