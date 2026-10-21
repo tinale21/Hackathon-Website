@@ -73,7 +73,7 @@ const FEATURES = [
   { title: 'Show me working', text: 'Students can show the critique, the rework and the late nights, so parents see what the work took.', art: 'working' },
   { title: 'Say what you need', text: 'Listen, cheer me on, advice, support, space, a distraction or a taste of home. The stamp tells the reader how to respond.', art: 'stamps' },
   { title: 'Sealed, never a chat', text: 'Letters arrive sealed and open with a tap. No read receipts, no streaks, no live back-and-forth.', art: 'sealed' },
-  { title: 'Write back in your voice', text: 'Parents reply by voice, words or photo, and share their own story through the same prompts.', art: 'voice' },
+  { title: 'Parents write back', text: 'A parent answers what their child asked for, not the grade: a voice note, a few words or a photo, in their own time.', art: 'voice' },
   { title: 'A semester recap', text: 'After a semester, the letters become a recap of everything the two of you shared.', art: 'recap' },
 ]
 

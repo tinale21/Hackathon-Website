@@ -102,7 +102,8 @@ img { max-width: 100%; }
 
 .fa-deck { background: linear-gradient(180deg, #f6f7fb 0%, #eceef6 100%); }
 /* Capture screen, photo mode (Create.jsx) */
-.fa-camera { background: #fff; }
+.fa-camera { background: linear-gradient(180deg, #f2f5fb 0%, #e3eaf6 100%); }
+.fa-camera .cam-ph, .fa-camera .cam { background: #fff; }
 .cam { position: absolute; left: 0; right: 0; top: 0; height: 262px; border-radius: 28px; overflow: hidden; background: var(--fill); }
 .cam-ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--ink-3); font-size: 12px; }
 .brackets { position: absolute; inset: 22% 18%; pointer-events: none; animation: bracketsIn 2.4s ease-in-out infinite; }
