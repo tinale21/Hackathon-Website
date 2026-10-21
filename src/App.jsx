@@ -82,7 +82,7 @@ function About() {
       <div className="section-head">
         <p className="label">About Lumen</p>
         <h2 className="display sm">We all want the same things. The middle gets lost.</h2>
-        <p className="lede">Parents read outcomes as a measure of effort. In art, the two are loosely linked: critiques are subjective, progress is slow, and setbacks like visa delays are out of a student’s control. So students stop sharing and say “I’m fine.” Parents carry a hidden middle too: the sacrifice behind their expectations.</p>
+        <p className="lede">Parents read outcomes as a measure of effort, but in art the two are loosely linked. So students stop sharing and say “I’m fine.” Parents carry a hidden middle too: the sacrifice behind their expectations.</p>
       </div>
 
       <div className="features">
