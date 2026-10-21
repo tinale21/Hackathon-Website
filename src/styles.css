@@ -226,8 +226,15 @@ img { max-width: 100%; }
 .step[aria-current='step'] .step-n { background: var(--ink); color: #fff; }
 .demo-links { display: flex; flex-wrap: wrap; gap: 10px; padding: 16px 18px 0; }
 
-.device { position: sticky; top: 88px; width: min(390px, calc(100vw - 48px), calc((100svh - 190px) * 390 / 844)); aspect-ratio: 390 / 844; border-radius: 48px; overflow: hidden; background: var(--screen); box-shadow: 0 40px 100px rgba(29, 29, 34, 0.12), 0 0 0 1px rgba(29, 29, 34, .04); }
+.device { position: sticky; top: 88px; width: min(412px, calc(100vw - 48px), calc((100svh - 190px) * 412 / 866)); padding: 11px; border-radius: 60px; background: #1c1c20; box-shadow: inset 0 0 0 1.5px #4a4a52, 0 0 0 2px #c8c9cf, 0 0 0 3px #e9eaee, 0 40px 100px rgba(29, 29, 34, 0.18); }
+.device-screen { position: relative; aspect-ratio: 390 / 844; border-radius: 49px; overflow: hidden; background: var(--screen); }
 .device iframe { width: 390px; height: 844px; border: 0; display: block; transform-origin: 0 0; }
+.device-island { position: absolute; left: 50%; top: 1.3%; width: 31%; height: 4.1%; border-radius: 999px; background: #000; transform: translateX(-50%); pointer-events: none; z-index: 2; }
+.device-btn { position: absolute; width: 4px; border-radius: 2px; background: linear-gradient(90deg, #b9bac1, #e4e5ea); }
+.device-btn.action { left: -5px; top: 16%; height: 4.5%; }
+.device-btn.vol-up { left: -5px; top: 24%; height: 8%; }
+.device-btn.vol-down { left: -5px; top: 34%; height: 8%; }
+.device-btn.power { right: -5px; top: 27%; height: 12%; background: linear-gradient(90deg, #e4e5ea, #b9bac1); }
 
 /* Team */
 .team { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
@@ -267,5 +274,6 @@ img { max-width: 100%; }
   .lede { font-size: 16px; }
   .features, .team { grid-template-columns: 1fr; }
   .gallery-frame { aspect-ratio: 3 / 4; }
-  .device { border-radius: 36px; width: min(390px, calc(100vw - 32px), calc((100svh - 100px) * 390 / 844)); }
+  .device { padding: 9px; border-radius: 50px; width: min(412px, calc(100vw - 40px), calc((100svh - 100px) * 412 / 866)); }
+  .device-screen { border-radius: 41px; }
 }

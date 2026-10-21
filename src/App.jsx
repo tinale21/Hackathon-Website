@@ -186,15 +186,20 @@ function Demo() {
             </li>
           </ol>
         </div>
-        <div className="device" ref={box}>
-          <iframe
-            key={reload}
-            ref={frame}
-            src={DEMO}
-            title="Lumen prototype"
-            allow="microphone; camera; autoplay"
-            style={{ transform: `scale(${scale})` }}
-          />
+        {/* iPhone frame: bezel, side buttons and Dynamic Island around the live prototype. */}
+        <div className="device">
+          <span className="device-btn action" /><span className="device-btn vol-up" /><span className="device-btn vol-down" /><span className="device-btn power" />
+          <div className="device-screen" ref={box}>
+            <iframe
+              key={reload}
+              ref={frame}
+              src={DEMO}
+              title="Lumen prototype"
+              allow="microphone; camera; autoplay"
+              style={{ transform: `scale(${scale})` }}
+            />
+            <span className="device-island" />
+          </div>
         </div>
       </div>
     </section>
