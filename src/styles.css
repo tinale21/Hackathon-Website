@@ -216,12 +216,10 @@ img { max-width: 100%; }
 .demo { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: start; }
 .demo-side { display: flex; flex-direction: column; gap: 32px; }
 .steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; max-width: 520px; }
-.step { width: 100%; display: flex; gap: 16px; align-items: flex-start; text-align: left; border: none; background: transparent; padding: 18px; border-radius: var(--r-md); transition: background .2s, box-shadow .2s; }
+.step { width: 100%; display: flex; gap: 16px; align-items: center; text-align: left; border: none; background: transparent; padding: 14px 18px; border-radius: var(--r-md); transition: background .2s, box-shadow .2s; }
 .step:hover { background: rgba(255,255,255,.6); }
 .step[aria-current='step'] { background: #fff; box-shadow: var(--shadow-card); }
-.step > span:last-child { display: flex; flex-direction: column; gap: 4px; }
 .step b { font-size: 17px; font-weight: 500; }
-.step span span { font-size: 15px; line-height: 1.45; color: var(--ink-2); }
 .step-n { width: 32px; height: 32px; border-radius: 16px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: var(--fill); font-size: 14px; font-weight: 500; color: var(--ink-2); }
 .step[aria-current='step'] .step-n { background: var(--ink); color: #fff; }
 .demo-links { display: flex; flex-wrap: wrap; gap: 10px; padding: 16px 18px 0; }

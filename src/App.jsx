@@ -134,11 +134,11 @@ function Gallery() {
 /* ---------- Demo ---------- */
 // Screens a judge can jump straight to. Ids match the prototype's routes (Hackathon/src/App.jsx).
 const STEPS = [
-  { id: 'splash', title: 'Meet Lumen', text: 'Answer four quick questions. They shape which prompts arrive.' },
-  { id: 'home', title: 'Home', text: 'Prompt of the day, new letters, and a pulse to say “thinking of you.”' },
-  { id: 'prompt', title: 'Write a letter', text: 'Swipe right on a prompt to answer it, then add a photo or words, paper and a stamp, and seal it.' },
-  { id: 'mail', title: 'Open a letter', text: 'Break the seal on Mom’s letter and write back by voice.' },
-  { id: 'recap', title: 'The recap', text: 'Look back on the semester together.' },
+  { id: 'splash', title: 'Meet Lumen' },
+  { id: 'home', title: 'Home' },
+  { id: 'prompt', title: 'Write a letter' },
+  { id: 'mail', title: 'Open a letter' },
+  { id: 'recap', title: 'The recap' },
 ]
 
 function Demo() {
@@ -176,7 +176,7 @@ function Demo() {
               <li key={s.id}>
                 <button className="step" aria-current={step === s.id ? 'step' : undefined} onClick={() => jump(s.id)}>
                   <span className="step-n">{i + 1}</span>
-                  <span><b>{s.title}</b><span>{s.text}</span></span>
+                  <b>{s.title}</b>
                 </button>
               </li>
             ))}
