@@ -6,7 +6,9 @@ import Intro from './components/Intro.jsx'
 import { GALLERY_URL } from './gallery.js'
 
 const media = (f) => `${import.meta.env.BASE_URL}media/${f}`
-const DEMO = 'https://tinale21.github.io/Hackathon/'
+// The prototype the Demo embeds. A build can point it elsewhere (VITE_DEMO_URL), e.g. a copy bundled with the site;
+// it's made absolute so jumping to a screen works from inside the frame too.
+const DEMO = new URL(import.meta.env.VITE_DEMO_URL || 'https://tinale21.github.io/Hackathon/', document.baseURI).href
 
 /* ---------- Pages ----------
    The site is one page, plus the Video Gallery on its own full-screen page at #/gallery.
@@ -48,33 +50,39 @@ export default function App() {
     const el = document.querySelector(from)
     if (el) el.style.viewTransitionName = 'gallery'
     transition(() => {
-      window.history.pushState({ lumenGallery: true }, '', '#/gallery')
+      // Some embeds (like the artifact viewer) block history changes; the page still switches.
+      try { window.history.pushState({ lumenGallery: true }, '', '#/gallery') } catch { /* no Back-button support there */ }
       setPage('gallery')
       window.scrollTo(0, 0)
     })
   }
 
-  // Close button, or the browser's Back button.
+  const goHome = () => {
+    if (pageRef.current === 'home') return
+    transition(() => {
+      flushSync(() => setPage('home'))
+      window.scrollTo(0, homeY)
+      // Only the gallery preview shrinks the page back into itself; from the nav link or the hero button
+      // the page just cross-fades, so their text doesn't zoom.
+      const el = origin === '.gallery-frame' && document.querySelector(origin)
+      if (el) el.style.viewTransitionName = 'gallery'
+    }, () => { const el = document.querySelector('.gallery-frame'); if (el) el.style.viewTransitionName = '' })
+  }
+
+  // The browser's Back button (or a link) changing the address.
   useEffect(() => {
     const onHash = () => {
-      if (isGallery()) { setPage('gallery'); return }
-      if (pageRef.current === 'home') return // an in-page link like #about
-      transition(() => {
-        flushSync(() => setPage('home'))
-        window.scrollTo(0, homeY)
-        // Only the gallery preview shrinks the page back into itself; from the nav link or the hero button
-        // the page just cross-fades, so their text doesn't zoom.
-        const el = origin === '.gallery-frame' && document.querySelector(origin)
-        if (el) el.style.viewTransitionName = 'gallery'
-      }, () => { const el = document.querySelector('.gallery-frame'); if (el) el.style.viewTransitionName = '' })
+      if (isGallery()) setPage('gallery')
+      else goHome() // does nothing for an in-page link like #about
     }
     window.addEventListener('hashchange', onHash)
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
   const closeGallery = () => {
-    if (window.history.state && window.history.state.lumenGallery) window.history.back()
-    else { window.history.replaceState(null, '', window.location.pathname); window.dispatchEvent(new HashChangeEvent('hashchange')) }
+    if (window.history.state && window.history.state.lumenGallery) { window.history.back(); return }
+    try { window.history.replaceState(null, '', window.location.pathname) } catch { /* blocked: just switch pages */ }
+    goHome()
   }
 
   if (page === 'gallery') return <GalleryPage onClose={closeGallery} />
